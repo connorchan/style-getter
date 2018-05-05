@@ -39,7 +39,7 @@ function getElementCSS(selector) {
 }
 
 function getElementInlineStyles(selector) {
-  var styleString = 'style: ';
+  var styleString = 'style=\"';
 
   for (var i = 0; i < COMMON_STYLE_PROPERTIES.length; i++) {
     let thisProperty = COMMON_STYLE_PROPERTIES[i];
@@ -50,6 +50,7 @@ function getElementInlineStyles(selector) {
       styleString += (thisProperty + ': ' + thisStyle + '; ');
     }
   }
+  styleString += '\"'
   console.log(styleString);
 }
 
