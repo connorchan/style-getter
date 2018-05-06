@@ -47,7 +47,7 @@ function getElementInlineStyles(selector) {
     let defaultValue = DEFAULT_VALUES[thisProperty];
 
     if (typeof defaultValue === 'undefined' || thisStyle !== defaultValue) {
-      styleString += (thisProperty + ': ' + thisStyle + '; ');
+      styleString += (thisProperty + ': ' + thisStyle.replace(/\"/g, '\'') + '; ');
     }
   }
   styleString += '\"'
