@@ -4,7 +4,7 @@ const DEFAULT_VALUES = {'height': 'auto', 'width': 'auto', 'font-size': 'medium'
 
 jQuery.fn.extend({
   getElementSelector: function() {
-    var element = jQuery(this);
+    const element = jQuery(this);
     var selector = element.get(0).nodeName.toLowerCase();
 
     if (typeof element.attr('id') !== 'undefined') {
