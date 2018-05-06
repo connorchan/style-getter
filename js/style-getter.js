@@ -62,8 +62,7 @@ function getElementInlineStyles(selector) {
 
 //output the styles for all of an element's descendants in a CSS-like way
 function getDescendantStyles(selector) {
-  var rootSelector = jQuery(selector).getElementSelector();
-  var descendants = jQuery(selector).find('*');
+  const descendants = jQuery(selector).find('*');
   var alreadyPrinted = {};
 
   descendants.each(function(i) {
