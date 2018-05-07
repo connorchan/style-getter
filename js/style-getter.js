@@ -16,11 +16,12 @@ jQuery.fn.extend({
     }
 
     if (typeof element.attr('class') !== 'undefined') {
-      let classes = element.attr('class').replace(/\s/g, '.');
+      let classes = jQuery.trim(element.attr('class'));
+      classes = classes.replace(/\s/g, '.');
       selector += ('.' + classes);
     }
 
-    return selector;
+    return jQuery.trim(selector);
   },
   getElementSelectorWithParents: function() {
     var selector = '';
@@ -35,7 +36,7 @@ jQuery.fn.extend({
         selector += ' ' + currentElement.getElementSelector();
       }
     }
-    return selector + ' > ' + element.getElementSelector();
+    return jQuery.trim(selector + ' > ' + element.getElementSelector());
   }
 });
 
