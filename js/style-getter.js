@@ -24,8 +24,8 @@ jQuery.fn.extend({
   },
   getElementSelectorWithParents: function() {
     var selector = '';
-    var element = jQuery(this);
-    var parents = element.parents();
+    const element = jQuery(this);
+    const parents = element.parents();
 
     for (var i = (parents.length - 1); i > -1; i --) {
       let currentElement = parents.eq(i);
