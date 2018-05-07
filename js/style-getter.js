@@ -31,10 +31,11 @@ jQuery.fn.extend({
       let currentElement = parents.eq(i);
       let currentNodeName = currentElement.get(0).nodeName.toLowerCase();
       if (currentNodeName && (currentNodeName !== 'body' && currentNodeName !== 'html')) {
+        selector +=  (selector.length > 0) ? ' >' : '';
         selector += ' ' + currentElement.getElementSelector();
       }
     }
-    return selector + ' ' + element.getElementSelector();
+    return selector + ' > ' + element.getElementSelector();
   }
 });
 
