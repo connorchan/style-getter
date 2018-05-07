@@ -26,7 +26,7 @@ jQuery.fn.extend({
 
 //output styles for an element in a CSS-like way
 function getElementCSS(selector) {
-  var styleString = selector + " {\n";
+  var styleString = selector + ' {\n';
 
   for (var i = 0; i < COMMON_STYLE_PROPERTIES.length; i++) {
     let thisProperty = COMMON_STYLE_PROPERTIES[i];
