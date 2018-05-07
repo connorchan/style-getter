@@ -27,7 +27,7 @@ jQuery.fn.extend({
     const element = jQuery(this);
     const parents = element.parents();
 
-    for (var i = (parents.length - 1); i > -1; i --) {
+    for (var i = (parents.length - 1); i > -1; i--) {
       let currentElement = parents.eq(i);
       let currentNodeName = currentElement.get(0).nodeName.toLowerCase();
       if (currentNodeName && (currentNodeName !== 'body' && currentNodeName !== 'html')) {
