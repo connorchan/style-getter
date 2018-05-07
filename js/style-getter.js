@@ -76,14 +76,17 @@ function getElementInlineStyles(selector) {
 
 //output the styles for all of an element's descendants in a CSS-like way
 function getDescendantStyles(selector, withParents) {
+
   const descendants = jQuery(selector).find('*');
   var alreadyPrinted = {};
 
   descendants.each(function(i) {
+    let thisSelector = '';
+
     if (withParents) {
-      let thisSelector = descendants.eq(i).getElementSelectorWithParents();
+      thisSelector = descendants.eq(i).getElementSelectorWithParents();
     } else {
-      let thisSelector = descendants.eq(i).getElementSelector();
+      thisSelector = descendants.eq(i).getElementSelector();
     }
     if (!alreadyPrinted[thisSelector]) {
       console.log(getElementCSS(thisSelector));
@@ -93,7 +96,9 @@ function getDescendantStyles(selector, withParents) {
 }
 
 //output the styles for an element AND all of its descendants in a CSS-like way
-function getElementAndDescendantStyles(selector) {
+function getElementAndDescendantStyles(selector, withParents) {
+  withParents = withParents || false;
+
   getElementCSS(selector);
-  getDescendantStyles(selector);
+  getDescendantStyles(selector, withParents);
 }
