@@ -21,6 +21,20 @@ jQuery.fn.extend({
     }
 
     return selector;
+  },
+  getElementSelectorWithParents: function() {
+    var selector = '';
+    var element = jQuery(this);
+    var parents = element.parents();
+
+    for (var i = (parents.length - 1); i > -1; i --) {
+      let currentElement = parents.eq(i);
+      let currentNodeName = currentElement.get(0).nodeName.toLowerCase();
+      if (currentNodeName && (currentNodeName !== 'body' && currentNodeName !== 'html')) {
+        selector += ' ' + currentElement.getElementSelector();
+      }
+    }
+    return selector + ' ' + element.getElementSelector();
   }
 });
 
@@ -66,7 +80,7 @@ function getDescendantStyles(selector) {
   var alreadyPrinted = {};
 
   descendants.each(function(i) {
-    let thisSelector = descendants.eq(i).getElementSelector();
+    let thisSelector = descendants.eq(i).getElementSelectorWithParents();
     if (!alreadyPrinted[thisSelector]) {
       console.log(getElementCSS(thisSelector));
       alreadyPrinted[thisSelector] = true;
