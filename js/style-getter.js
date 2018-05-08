@@ -101,7 +101,7 @@ function getElementStyles(selector, getInline) {
     }
   }
 
-  getInline ? (styleString += '\"') : (styleString += '}\n');
+  getInline ? (styleString = jQuery.trim(styleString) + '\"') : (styleString += '}\n');
 
   console.log(styleString);
 }
