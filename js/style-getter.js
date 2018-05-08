@@ -6,6 +6,7 @@ const DEFAULT_VALUES = {'height': 'auto', 'width': 'auto', 'font-size': 'medium'
 
 /**
 * Try to write a specific selector for an element, using its id and classes when available
+*
 * @return {string} Attempted selector for a jQuery element
 */
 jQuery.fn.extend({
@@ -27,6 +28,7 @@ jQuery.fn.extend({
   },
   /**
   * Try to write a selector for a given element in the context of its parents
+  *
   * @return {string} Attempted selector for a jQuery element
   */
   getElementSelectorWithParents: function() {
