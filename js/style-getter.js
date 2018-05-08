@@ -4,8 +4,10 @@ const COMMON_STYLE_PROPERTIES = ["background", "background-color", "background-i
 //default values for common CSS properties
 const DEFAULT_VALUES = {'height': 'auto', 'width': 'auto', 'font-size': 'medium', 'background-color': 'rgba(0, 0, 0, 0)', 'line-height': 'normal', 'border': 'medium none', 'border-radius': '0px', 'display': '?', 'position': 'static', 'top': 'auto', 'bottom': 'auto', 'left': 'auto', 'right': 'auto', 'margin-top': '0px', 'margin-bottom': '0px', 'margin-right': '0px', 'margin-left': '0px', 'padding-top': '0px', 'padding-bottom': '0px', 'padding-right': '0px', 'padding-left': '0px', 'float': 'none', 'clear': 'none', 'background-image': 'none', 'background-size': 'auto', 'background-repeat': 'repeat', 'background-position': '0% 0%', 'box-sizing': 'content-box', 'text-decoration': 'none', 'list-style': 'disc outside none', 'text-transform': 'none', 'transform': 'none', 'vertical-align': 'baseline', 'opacity': '1', 'font-weight': 'normal', 'box-shadow': 'none', 'word-wrap': 'normal', 'white-space': 'normal', 'flex': '0 1 auto', 'flex-basis': 'auto', 'flex-direction': 'row', 'flex-flow': 'row nowrap', 'flex-grow': '0', 'flex-shrink': '1', 'flex-wrap': 'nowrap', 'max-height': 'none', 'max-width': 'none', 'min-height': '0px', 'min-width': '0px', 'overflow': 'visible', 'overflow-x': 'visible', 'overflow-y': 'visible', 'overflow-wrap' : 'normal', 'table-layout': 'auto', 'visibility': 'visible', 'z-index': 'auto', 'word-break': 'normal', 'line-break': 'auto'};
 
-//try to write a specific selector for a particular element
-//jQuery("selector").getElementSelector();
+/**
+* Try to write a specific selector for an element, using its id and classes when available
+* @return {string} Attempted selector for a jQuery element
+*/
 jQuery.fn.extend({
   getElementSelector: function() {
     const element = jQuery(this);
@@ -23,6 +25,10 @@ jQuery.fn.extend({
 
     return jQuery.trim(selector);
   },
+  /**
+  * Try to write a selector for a given element in the context of its parents
+  * @return {string} Attempted selector for a jQuery element
+  */
   getElementSelectorWithParents: function() {
     var selector = '';
     const element = jQuery(this);
@@ -40,7 +46,27 @@ jQuery.fn.extend({
   }
 });
 
-//output styles for an element in either a CSS-like way or inline fashion
+//concatenate property and style value to a string
+/**
+* Takes in a string representing style output, concatenates new styles to it, then returns it.
+*
+* @param {boolean} getInline true if the output is inline, false or undefined for default CSS-like output
+* @param {string} styleString String containing the style output
+* @param {string} property Property to be appended to the output string
+* @param {string} style Style to be appended to the output string
+* @return {string} The updated styleString output
+*/
+function concatenateStyleString(getInline, styleString, property, style) {
+  getInline ? (styleString += (property + ': ' + style.replace(/\"/g, '\'') + '; ')) : (styleString += ('\t' + property + ': ' + style + ';\n'));
+  return styleString;
+}
+
+/**
+* Outputs styles for an element in either a CSS-like way, or inline
+*
+* @param {string} selector The selector of the root element whose styles you want
+* @param {boolean} getInline true to print the style as an inline style attribute, false or undefined to output like CSS
+*/
 function getElementStyles(selector, getInline) {
   getInline = getInline || false;
   var styleString = getInline? 'style=\"' : (selector + ' {\n');
@@ -54,21 +80,21 @@ function getElementStyles(selector, getInline) {
       switch (thisProperty) {
         case 'border':
         if (thisStyle.indexOf('0px none') === -1) {
-          getInline ? (styleString += (thisProperty + ': ' + thisStyle.replace(/\"/g, '\'') + '; ')) : (styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n'));
+          styleString = concatenateStyleString(getInline, styleString, thisProperty, thisStyle);
         }
           break;
         case 'background':
           if (thisStyle.indexOf('rgb') === -1 && thisStyle.indexOf('none repeat scroll') === -1) {
-            getInline ? (styleString += (thisProperty + ': ' + thisStyle.replace(/\"/g, '\'') + '; ')) : (styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n'));
+            styleString = concatenateStyleString(getInline, styleString, thisProperty, thisStyle);
           }
           break;
         case 'text-decoration':
           if (thisStyle.indexOf('none solid') === -1) {
-            getInline ? (styleString += (thisProperty + ': ' + thisStyle.replace(/\"/g, '\'') + '; ')) : (styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n'));
+            styleString = concatenateStyleString(getInline, styleString, thisProperty, thisStyle);
           }
           break;
         default:
-          getInline ? (styleString += (thisProperty + ': ' + thisStyle.replace(/\"/g, '\'') + '; ')) : (styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n'));
+          styleString = concatenateStyleString(getInline, styleString, thisProperty, thisStyle);
       }
     }
   }
@@ -78,7 +104,12 @@ function getElementStyles(selector, getInline) {
   console.log(styleString);
 }
 
-//output the styles for all of an element's descendants in a CSS-like way
+/**
+* Outputs the styles for all of an element's descendants in a CSS-like way
+*
+* @param {string} selector The selector of the root element whose styles you want
+* @param {boolean} withParents Optional — true to output selectors in context of their parents, false or undefined otherwise
+*/
 function getDescendantStyles(selector, withParents) {
   const descendants = jQuery(selector).find('*');
   var alreadyPrinted = {};
@@ -93,7 +124,12 @@ function getDescendantStyles(selector, withParents) {
   });
 }
 
-//output the styles for an element AND all of its descendants in a CSS-like way
+/**
+* Outputs the styles of an element AND all of its descendants in a CSS-like way
+*
+* @param {string} selector The selector of the root element whose styles you want
+* @param {boolean} withParents Optional — true to output selectors in context of their parents, false or undefined otherwise
+*/
 function getElementAndDescendantStyles(selector, withParents) {
   withParents = withParents || false;
 
