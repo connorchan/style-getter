@@ -40,9 +40,10 @@ jQuery.fn.extend({
   }
 });
 
-//output styles for an element in a CSS-like way
-function getElementCSS(selector) {
-  var styleString = selector + ' {\n';
+//output styles for an element in either a CSS-like way or inline fashion
+function getElementStyles(selector, getInline) {
+  getInline = getInline || false;
+  var styleString = getInline? 'style=\"' : (selector + ' {\n');
 
   for (var i = 0; i < COMMON_STYLE_PROPERTIES.length; i++) {
     let thisProperty = COMMON_STYLE_PROPERTIES[i];
@@ -53,44 +54,27 @@ function getElementCSS(selector) {
       switch (thisProperty) {
         case 'border':
         if (thisStyle.indexOf('0px none') === -1) {
-          styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n');
+          getInline ? (styleString += (thisProperty + ': ' + thisStyle.replace(/\"/g, '\'') + '; ')) : (styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n'));
         }
           break;
         case 'background':
           if (thisStyle.indexOf('rgb') === -1 && thisStyle.indexOf('none repeat scroll') === -1) {
-            styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n');
+            getInline ? (styleString += (thisProperty + ': ' + thisStyle.replace(/\"/g, '\'') + '; ')) : (styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n'));
           }
           break;
         case 'text-decoration':
           if (thisStyle.indexOf('none solid') === -1) {
-            styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n');
+            getInline ? (styleString += (thisProperty + ': ' + thisStyle.replace(/\"/g, '\'') + '; ')) : (styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n'));
           }
           break;
         default:
-          styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n');
+          getInline ? (styleString += (thisProperty + ': ' + thisStyle.replace(/\"/g, '\'') + '; ')) : (styleString += ('\t' + thisProperty + ': ' + thisStyle + ';\n'));
       }
     }
   }
 
-  styleString += '}\n';
+  getInline ? (styleString += '\"') : (styleString += '}\n');
 
-  console.log(styleString);
-}
-
-//output an element's styles in an inline fashion
-function getElementInlineStyles(selector) {
-  var styleString = 'style=\"';
-
-  for (var i = 0; i < COMMON_STYLE_PROPERTIES.length; i++) {
-    let thisProperty = COMMON_STYLE_PROPERTIES[i];
-    let thisStyle = jQuery(selector).css(thisProperty);
-    let defaultValue = DEFAULT_VALUES[thisProperty];
-
-    if (typeof defaultValue === 'undefined' || thisStyle !== defaultValue) {
-      styleString += (thisProperty + ': ' + thisStyle.replace(/\"/g, '\'') + '; ');
-    }
-  }
-  styleString += '\"'
   console.log(styleString);
 }
 
@@ -103,7 +87,7 @@ function getDescendantStyles(selector, withParents) {
     let thisSelector = withParents ? descendants.eq(i).getElementSelectorWithParents() : descendants.eq(i).getElementSelector();
 
     if (!alreadyPrinted[thisSelector]) {
-      console.log(getElementCSS(thisSelector));
+      console.log(getElementStyles(thisSelector));
       alreadyPrinted[thisSelector] = true;
     }
   });
@@ -113,6 +97,6 @@ function getDescendantStyles(selector, withParents) {
 function getElementAndDescendantStyles(selector, withParents) {
   withParents = withParents || false;
 
-  getElementCSS(selector);
+  getElementStyles(selector);
   getDescendantStyles(selector, withParents);
 }
