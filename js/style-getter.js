@@ -14,14 +14,16 @@ jQuery.fn.extend({
     const element = jQuery(this);
     var selector = element.get(0).nodeName.toLowerCase();
 
-    if (typeof element.attr('id') !== 'undefined') {
+    if (typeof element.attr('id') !== 'undefined' && element.attr('id') !== "") {
       selector += ('#' + element.attr('id'));
     }
 
     if (typeof element.attr('class') !== 'undefined') {
       let classes = jQuery.trim(element.attr('class'));
-      classes = classes.replace(/\s/g, '.');
-      selector += ('.' + classes);
+      if (classes !== "") {
+          classes = classes.replace(/\s/g, '.');
+          selector += ('.' + classes);
+      }
     }
 
     return jQuery.trim(selector);
@@ -48,7 +50,6 @@ jQuery.fn.extend({
   }
 });
 
-//concatenate property and style value to a string
 /**
 * Takes in a string representing style output, concatenates new styles to it, then returns it.
 *
@@ -81,17 +82,17 @@ function getElementStyles(selector, getInline) {
     if ((typeof defaultValue === 'undefined' || thisStyle !== defaultValue) && thisStyle !== '') {
       switch (thisProperty) {
         case 'border':
-        if (thisStyle.indexOf('0px none') === -1) {
+        if (thisStyle && thisStyle.indexOf('0px none') === -1) {
           styleString = concatenateStyleString(getInline, styleString, thisProperty, thisStyle);
         }
           break;
         case 'background':
-          if (thisStyle.indexOf('rgb') === -1 && thisStyle.indexOf('none repeat scroll') === -1) {
+          if (thisStyle && thisStyle.indexOf('rgb') === -1 && thisStyle.indexOf('none repeat scroll') === -1) {
             styleString = concatenateStyleString(getInline, styleString, thisProperty, thisStyle);
           }
           break;
         case 'text-decoration':
-          if (thisStyle.indexOf('none solid') === -1) {
+          if (thisStyle && thisStyle.indexOf('none solid') === -1) {
             styleString = concatenateStyleString(getInline, styleString, thisProperty, thisStyle);
           }
           break;
